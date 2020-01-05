@@ -15,5 +15,5 @@ def git_push(str_directory_path, id, password):
     os.system("git commit -m 'e'")
     git_config(str_directory_path, name, email)
     os.system(
-        "git push https://" + id +":" + password + "@GwanakguSquirrel/my1.git --all"
+        "git push https://" + id +":" + password + "@github.com/GwanakguSquirrel/my1.git --all"
         )
