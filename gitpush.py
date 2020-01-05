@@ -6,6 +6,7 @@ def git_config(str_directory_path, name, email):
     os.chdir(str_directory_path)
     os.system("git config user.name " + name)
     os.system("git config user.email " + email)
+    print("git config done")
 
 def git_push(str_directory_path, id, password):
     name = "test"
@@ -19,3 +20,4 @@ def git_push(str_directory_path, id, password):
     os.system(
         "git push https://" + id +":" + password + "@github.com/GwanakguSquirrel/my1.git --all"
         )
+    print("git push done")
