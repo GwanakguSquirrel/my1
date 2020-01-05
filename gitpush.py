@@ -18,8 +18,12 @@ def git_push(str_directory_path, id, password):
 
     cmd = ["git push https://" + id +":" + password + "@github.com/GwanakguSquirrel/my1.git --all"]
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print(3)
     o, e = proc.communicate()
+    print(3)
     o = o.decode('ascii')
+    print(3)
     e = e.decode('ascii')
+    print(3)
     print("o:", o)
     print("e:", e)
