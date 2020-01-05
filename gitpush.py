@@ -21,3 +21,4 @@ def git_push(str_directory_path, id, password):
         "git push https://" + id +":" + password + "@github.com/GwanakguSquirrel/my1.git --all"
         )
     print("git push done")
+# if your password or username contain @ replace it with %40
