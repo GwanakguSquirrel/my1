@@ -1,11 +1,400 @@
+
+<!DOCTYPE html>
 <html>
 
 <head>
-	<title>Title is here</title>
+<title>튜터룸 운영 안내</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+<style>
+body {	font-size: 60%;	}
+
+@media (min-height: 450px) and (min-width: 450px) {
+	body {	font-size: 75%;	}
+}
+
+@media (min-height: 600px) and (min-width: 600px) {
+	body {	font-size: 100%;	}
+}
+
+body {
+	font-family: 맑은 고딕, sans-serif;
+	background-color: #F3F6FC;
+}
+
+ul {
+	padding-left: 2em;
+}
+
+table {
+	border-collapse: collapse;
+	text-align: center;
+	margin: auto;
+}
+
+caption {
+	padding: 0.5em 1.0em;
+	font-weight: bold;
+	font-size: 150%;
+}
+
+th, td {
+	border: 1px solid rgb(204, 204, 204);
+	padding: 0.2em 0.5em;
+	text-align: center;
+}
+
+th {
+	background-color: #3C65B9;
+	color: white;
+}
+
+span.td {
+	border: 1px solid rgb(204, 204, 204);
+	display: inline-block;
+	padding: 0.5em;
+	margin: 0em;
+}
+
+</style>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$("span.toggle").click(function(){
+				$("div.toggle").toggle();
+			});
+		});
+	</script>
+	<script>
+		let _url = "https://docs.google.com/spreadsheets/d/1wfyx7ecsNmxtgZRf_VeBFj0wsjdurSN9R5qkkSIcmXI/gviz/tq?";
+
+		let _parsing = function (data) {
+			let _table = data.table.rows;
+			let div_Container = document.getElementById("date");
+			div_Container.innerHTML = _table[56].c[6].v;
+			parsedData = []
+			for (let k = 0; k < 7; k++) {
+				let dataF = {};
+				dataF.class = _table[k * 8].c[6].v;
+				dataF.course = _table[k * 8 + 1].c[6].v;
+				dataF.name = _table[k * 8 + 2].c[6].v;
+				dataF.data = [];
+				for (let i = 0; i < 8; i++) {
+					_tmp = [];
+					for (let j = 1; j < 6; j++) {
+						if (_table[k * 8 + i].c[j] != null) {
+							_tmp.push(_table[k * 8 + i].c[j].v);
+						}
+						else {
+							_tmp.push('');
+						}
+					}
+					dataF.data.push(_tmp);
+				}
+				parsedData.push(dataF)
+			}
+
+			return parsedData;
+		};
+		
+		let _mycallback = function (data) {
+			arrayData = _parsing(data);
+			let div_Container = document.getElementById("tableSection");
+			let eachData;
+			for (eachData of arrayData) {
+				let table = document.createElement("table");
+				let tr = table.insertRow(-1);
+				let th = document.createElement("th");
+				let td = document.createElement("td");
+
+				td.colSpan = 6;
+				td.innerHTML = `${eachData.course} ${eachData.name} ${eachData.class}`;
+				tr.appendChild(td);
+
+				tr = table.insertRow(-1);
+				let firstRow = ["시간", "월", "화", "수", "목", "금"];
+
+				for (let el of firstRow) {
+					th = document.createElement("th");
+					th.innerHTML = el;
+					tr.appendChild(th);
+				}
+
+				for (let i = 0; i < 8; i++) {
+					tr = table.insertRow(-1);
+					th = document.createElement("th");
+					th.innerHTML = `${13 + parseInt(i / 2)}:${(i % 2 == 0) ? "00" : "30"} ~ ${13 + parseInt((i + 1) / 2)}:${((i + 1) % 2 == 0) ? "00" : "30"}`;
+					tr.appendChild(th);
+					for (let j = 0; j < 5; j++) {
+						td = document.createElement("td");
+						let cont = eachData.data[i][j]
+						td.innerHTML = cont;
+						if (cont.indexOf("O") !== -1) {
+							td.bgColor = '#81DAF5';
+						}
+						else if (cont.indexOf("X") !== -1) {
+							td.bgColor = '#F78181';
+						}
+						tr.appendChild(td);
+					}
+				}
+				div_Container.appendChild(table);
+				div_Container.appendChild(
+					document.createElement("p")
+				)
+			}
+		}
+
+		let _params = {
+			tq: encodeURIComponent(
+				'SELECT *'
+			),
+			sheet: encodeURIComponent(
+				'Sheet1'
+			),
+			tqx: 'responseHandler:_mycallback'
+		}
+		_qs = [];
+		for (let key in _params) {
+			_qs.push(key + '=' + _params[key]);
+		}
+		_url += _qs.join('&');
+		let _script = window.document.createElement('script');
+		_script.async = true;
+		_script.src = _url;
+		_script.onerror = function () {
+			alert('!!!')
+		};
+		done = false;
+		_script.onload = _script.onreadystatechange = function () {
+			if (!done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete')) {
+				done = true;
+				_script.onload = _script.onreadystatechange = null;
+				if (_script.parentNode) {
+					return _script.parentNode.removeChild(_script);
+				}
+			}
+		};
+
+		window.document.getElementsByTagName('head')[0].appendChild(_script);
+
+	</script>
 </head>
 
 <body>
-	Hello, world!
+<div style="margin:auto; max-width: 1024px; overflow: auto;">
+
+<b><span style="font-size:18pt;">온라인(ZOOM) 튜터룸 이용절차</span></b> <br>
+0. 연습강좌 eTL에 모든 조교님들의 ID가 공지됩니다. 학생분들은 해당 주차의 담당조교가 누구인지 확인하시고, eTL에 게시글을 통해 담당조교의 ZOOM ID를 확인하시어 접속하시면 됩니다. <br>
+		1. 담당조교가 개설한 회의실에 접속하셨다면, 우선 대기실로 연결이 될 겁니다. 조교는 대기실에서 학생을 한 명씩 수용하여 질문을 받아줄 것입니다. 담당조교가 대기실에서 옮겨줄 때까지 기다려주세요.<br>
+2. 조교가 잘 이해할 수 있는 방식으로 질문을 하시고, 해답을 들으시면 됩니다. 해당 과목의 범위를 벗어나는 경우에는 조교에게 응답할 의무는 없습니다. 이 점 숙지하시고, 범위를 벗어나는 질문하실 때에는 담당조교에게 미리 허가를 받고 질문하시기 바랍니다.<br>
+3. 조교가 헷갈릴 수 있으므로 질문이 끝나시면 해당 회의실에서 나가주시기 바랍니다.
+<table>
+	<caption>운영 장소</caption>
+	<tr>
+		<th>교과목 이름</th>
+		<td>미적분학(수학연습 1, 미적분학연습 1, 고급수학연습 1)</td>
+		<td>생명과학을 위한 수학 1</td>
+	</tr>
+	<tr>
+		<th>비대면강의 운영기간</th>
+		<td colspan="3">ZOOM 운영 (ID는 eTL 확인)</td>
+	</tr>
+	<tr>
+		<th>장소(대면강의 운영기간)</th>
+		<td>26동 411호, 413~415호</td>
+		<td>26동 314, 315호</td>
+	</tr>
+</table>
+
+</div>
+
+<p></p>
+<div style="margin:auto; max-width: 1024px; overflow: auto;">
+<table>
+	<caption>운영 시간</caption>
+	<tr>
+            <td>
+			(비대면) 주 3회(미적분학은 화,목,금) 13:00~17:00 (자세한 일정은 아래 표 참조)<br>
+			(대면) 월~금 13:00~17:00<br>
+			튜터의 수업 등 사정으로 운영시간에 일부 공백이 발생할 수 있습니다(아래 표 참조).<br>
+			<span class="toggle" style="cursor:pointer;"><span style="font-weight:bold;text-decoration:underline;">[펼치기/접기]</span><br>
+</span><span class="toggle" style="cursor:pointer;">				<div class="toggle" id="date" style="font-size:120%; text-align:center; margin:10pt; display:none;"></div>
+				<div class="toggle" id="tableSection" style="display:none;"></div>
+			</span>
+            </td>
+	</tr>
+</table>
+</div>
+<p></p>
+<div style="margin:auto; max-width: 1024px; overflow: auto;">
+<table>
+	<caption>운영 날짜 및 과목</caption>
+	<tr>
+		<th rowspan="2">주차</th>
+		<td rowspan="17" style="border-color:transparent inherit;">&nbsp;</td>
+		<th colspan="5">날짜별 운영 여부</th>
+		<td rowspan="17" style="border-color:transparent inherit;">&nbsp;</td>
+		<th colspan="4">과목별 운영 여부</th>
+	</tr>
+	<tr>
+		<th>월</th>
+		<th>화</th>
+		<th>수</th>
+		<th>목</th>
+		<th>금</th>
+		<th>수연 1</th>
+		<th>생수 1</th>
+	</tr>
+	<tr>
+		<th>1주(3/16-3/20)</th>
+		<td><span style="color:red;">휴무</span></td>
+		<td><span style="color:red;">휴무</span></td>
+		<td><span style="color:red;">휴무</span></td>
+		<td><span style="color:red;">휴무</span></td>
+		<td><span style="color:red;">휴무</span></td>
+		<td><span style="color:red;">X</span></td>
+		<td><span style="color:red;">X</span></td>
+	</tr>
+        <tr>
+		<th>2주(3/23-3/27)</th>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+            <td>운영</td>
+            <td>운영</td>
+		<td>O</td>
+		<td><span style="color:red;">X</span></td>
+        </tr>
+        <tr>
+		<th>3주(3/30-4/3)</th>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>O</td>
+		<td>O</td>
+        </tr>
+        <tr>
+		<th>4주(4/6-4/10)</th>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>O</td>
+		<td>O</td>
+        </tr>
+        <tr>
+		<th>5주(4/13-4/17)</th>
+		<td>운영</td>
+		<td>운영</td>
+		<td><span style="color:red;">휴무(국회의원선거일)</span></td>
+            <td>운영</td>
+		<td>운영</td>
+		<td>O</td>
+		<td>O</td>
+        </tr>
+        <tr>
+		<th>6주(4/20-4/24)</th>
+		<td>운영</td>
+		<td>운영</td>
+            <td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>O</td>
+		<td>O</td>
+        </tr>
+        <tr>
+		<th>7주(4/27-5/1)</th>
+		<td>운영</td>
+            <td>운영</td>
+		<td>운영</td>
+		<td><span style="color:red;">휴무(부처님오신날)</span></td>
+		<td>운영</td>
+		<td>O</td>
+		<td>O</td>
+        </tr>
+        <tr>
+		<th>8주(5/4-5/8)</th>
+		<td><span style="color:red;">휴무</span></td>
+		<td><span style="color:red;">휴무</span></td>
+		<td><span style="color:red;">휴무</span></td>
+		<td><span style="color:red;">휴무</span></td>
+		<td><span style="color:red;">휴무</span></td>
+		<td><span style="color:red;">X</span></td>
+		<td><span style="color:red;">X</span></td>
+        </tr>
+        <tr>
+		<th>9주(5/11-5/15)</th>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>O</td>
+		<td><span style="color:red;">X</span></td>
+        </tr>
+        <tr>
+		<th>10주(5/18-5/22)</th>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>O</td>
+		<td>O</td>
+        </tr>
+        <tr>
+		<th>11주(5/25-5/29)</th>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>O</td>
+		<td>O</td>
+        </tr>
+        <tr>
+		<th>12주(6/1-6/5)</th>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>O</td>
+		<td>O</td>
+        </tr>
+        <tr>
+		<th>13주(6/8-6/12)</th>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>O</td>
+		<td>O</td>
+        </tr>
+        <tr>
+		<th>14주(6/15-6/19)</th>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>운영</td>
+		<td>O</td>
+		<td>O</td>
+        </tr>
+       
+</table>
+<!--p style="font-weight:bold;">변경 이력</p>
+<ul>
+	<li>없음</li>
+</ul-->
+</div>
 </body>
 
 </html>
+
