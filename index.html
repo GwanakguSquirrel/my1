@@ -127,16 +127,10 @@
         }
 
         let googleCallback = function (data) {
-            console.log(1);
             let dateString = parseDate(data);
             let workerData = parseWorkerDescription(data);
             let arrayData = parseTable(data, workerData.length);
             let colorData = parseColor(data)
-
-            console.log(dateString);
-            console.log(workerData);
-            console.log(arrayData);
-            console.log(colorData);
 
             let firstRow = ["시간", "월", "화", "수", "목", "금"];
             let targetContainer = document.getElementById("roster_table_section");
@@ -146,7 +140,7 @@
                 let th = document.createElement("th");
                 let td = document.createElement("td");
                 td.colSpan = 6;
-                td.innerHTML = `${workerData[i]}`;
+                td.innerHTML = workerData[i];
                 tr.appendChild(td);
                 tr = table.insertRow(-1);
 
