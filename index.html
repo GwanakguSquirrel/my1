@@ -76,7 +76,6 @@
 
         let parseTable = function (data, numberOfWorkers) {
             let table = data.table.rows;
-            console.log(table)
             let parsedData = []
             for (let k = 0; k < numberOfWorkers * 8; k += 8) {
                 let tmpData = [];
@@ -127,16 +126,10 @@
         }
 
         let googleCallback = function (data) {
-            console.log(1);
             let dateString = parseDate(data);
             let workerData = parseWorkerDescription(data);
             let arrayData = parseTable(data, workerData.length);
             let colorData = parseColor(data)
-
-            console.log(dateString);
-            console.log(workerData);
-            console.log(arrayData);
-            console.log(colorData);
 
             let firstRow = ["시간", "월", "화", "수", "목", "금"];
             let targetContainer = document.getElementById("roster_table_section");
@@ -146,7 +139,7 @@
                 let th = document.createElement("th");
                 let td = document.createElement("td");
                 td.colSpan = 6;
-                td.innerHTML = `${workerData[i]}`;
+                td.innerHTML = workerData[i];
                 tr.appendChild(td);
                 tr = table.insertRow(-1);
 
@@ -158,7 +151,10 @@
                 for (let j = 0; j < 8; j++) {
                     tr = table.insertRow(-1);
                     th = document.createElement("th");
-                    th.innerHTML = `${13 + parseInt(j / 2)}:${(j % 2 == 0) ? "00" : "30"} ~ ${13 + parseInt((j + 1) / 2)}:${((j + 1) % 2 == 0) ? "00" : "30"}`;
+                    th.innerHTML = (13 + parseInt(j / 2)).toString() + ":" + ((j % 2 === 0) ? "00" : "30");
+                    th.innerHTML += " ~ ";
+                    th.innerHTML += (13 + parseInt((j + 1) / 2)).toString() + ":" + ((j % 2 === 0) ? "30" : "00");
+                    // th.innerHTML = `${13 + parseInt(j / 2)}:${(j % 2 == 0) ? "00" : "30"} ~ ${13 + parseInt((j + 1) / 2)}:${((j + 1) % 2 == 0) ? "00" : "30"}`;
                     tr.appendChild(th);
                     for (let k = 0; k < 5; k++) {
                         td = document.createElement("td");
